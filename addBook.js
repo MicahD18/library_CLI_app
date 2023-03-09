@@ -8,7 +8,12 @@ export default async function addBook(library) {
     const answers = await inquirer.prompt([
       {
         name: "bookName",
-        message: "Enter the name of your book:",
+        message: "Name of book:",
+        type: "input",
+      },
+      {
+        name: "author",
+        message: "Author name:",
         type: "input",
       },
       {
@@ -21,6 +26,7 @@ export default async function addBook(library) {
     const book = {
       id: uuidv4(),
       bookName: answers.bookName,
+      author: answers.author,
       numOfPages: answers.numOfPages,
     };
 
