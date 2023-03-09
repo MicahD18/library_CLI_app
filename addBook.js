@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default async function addBook(library) {
   try {
+    // CLI prompt for user input
     const answers = await inquirer.prompt([
       {
         name: "bookName",
@@ -23,6 +24,7 @@ export default async function addBook(library) {
       },
     ]);
 
+    // store the answers in an object
     const book = {
       id: uuidv4(),
       bookName: answers.bookName,
@@ -30,6 +32,7 @@ export default async function addBook(library) {
       numOfPages: answers.numOfPages,
     };
 
+    // push the object to the array
     library.push(book);
 
     console.log(library);
@@ -38,11 +41,13 @@ export default async function addBook(library) {
     if (fs.existsSync("library-db.json")) {
       createBook(library);
     } else {
+      // if the file doesn't exist, create the file
       fs.appendFile("library-db.json", "[]", (err) => {
         if (err) {
           console.log("Failed to create library-db.json");
           return;
         }
+        // call the createBook method
         createBook(library);
       });
     }
@@ -52,6 +57,7 @@ export default async function addBook(library) {
 }
 
 async function createBook(library) {
+  // write the library data to the file
   await fs.writeFile("library-db.json", JSON.stringify(library), (err) => {
     if (err) {
       console.log("Error writing data to file", err);

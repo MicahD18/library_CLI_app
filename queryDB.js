@@ -1,10 +1,11 @@
 import fs from "fs";
 
-let library = [];
+let library = []; // array for storing books
 
-// creates db file if it doesn't exist
+// queryDB takes a CRUD function
 export default async function queryDB(queryFunction) {
   try {
+    // if the file exists, read the data in the file
     if (fs.existsSync("library-db.json")) {
       await fs.readFile("library-db.json", (err, data) => {
         // read data
@@ -16,6 +17,7 @@ export default async function queryDB(queryFunction) {
           return;
         }
 
+        // then call the CRUD function
         if (queryFunction && !err) {
           queryFunction(library);
         }

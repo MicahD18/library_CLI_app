@@ -1,13 +1,14 @@
 import fs from "fs";
 import inquirer from "inquirer";
 import queryDB from "./queryDB.js";
-import { v4 as uuidv4 } from "uuid";
 import dbFileCheck from "./dbFileCheck.js";
 
 export default async function updateBook(library) {
+  // check if file exists
   dbFileCheck();
 
   try {
+    // prompt user for id from the object they want to update
     const answers = await inquirer.prompt([
       {
         name: "bookID",
@@ -20,6 +21,7 @@ export default async function updateBook(library) {
 
     library.forEach((element) => {
       if (element.id === answers.bookID) {
+        // set current to the element
         current = element;
         // collect the updated information and overwrite the database with the new data
         updateDetails(current, library);
@@ -32,6 +34,7 @@ export default async function updateBook(library) {
 
 async function updateDetails(current, library) {
   try {
+    // prompt the user to change the values of the book
     const feedbacks = await inquirer.prompt([
       {
         type: "input",
@@ -53,10 +56,12 @@ async function updateDetails(current, library) {
       },
     ]);
 
+    // set the current book data to the new data the user put in
     current.bookName = feedbacks.bookName;
     current.author = feedbacks.author;
     current.numOfPages = feedbacks.numOfPages;
 
+    // write the updated library data to the file
     await fs.writeFile("library-db.json", JSON.stringify(library), (err) => {
       if (err) {
         console.log(err);

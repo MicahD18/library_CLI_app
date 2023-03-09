@@ -1,10 +1,10 @@
 import fs from "fs";
 import inquirer from "inquirer";
 import queryDB from "./queryDB.js";
-import { v4 as uuidv4 } from "uuid";
 import dbFileCheck from "./dbFileCheck.js";
 
 export default async function removeBook(library) {
+  // check if file exists
   dbFileCheck();
 
   try {
@@ -21,7 +21,6 @@ export default async function removeBook(library) {
     const remnantData = [];
 
     library.forEach((book) => {
-        // if the id !== bookID from the user input
       if (book.id !== answers.bookID) {
         console.log("removing book...");
         // push the books to the array
