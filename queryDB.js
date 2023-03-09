@@ -1,17 +1,33 @@
 import fs from "fs";
 
-export default function queryDB() {
-  if (!fs.existsSync("library-db.json")) {
-    fs.writeFile("library-db.json", "[]", (data, err) => {
-      if (err) {
-        console.error("Error writing file", err);
+let library = [];
+
+// creates db file if it doesn't exist
+export default async function queryDB(queryFunction) {
+  try {
+    if (fs.existsSync("library-db.json")) {
+      await fs.readFile("library-db.json", (err, data) => {
+        // read data
+        library = JSON.parse(data.toString());
+        console.log(library);
+
+        if (err) {
+          console.error("ERROR:", err);
+          return;
+        }
+
+        if (queryFunction && !err) {
+          queryFunction(library);
+        }
+      });
+    } else {
+      // if external function exists, but there is an error
+      if (queryFunction) {
+        queryFunction(library);
+        return;
       }
-      console.log("Creating file");
-      return;
-    });
-  } else {
-    console.log("File already exists");
+    }
+  } catch (err) {
+    console.error(`Something went wrong: ${err.message}`);
   }
 }
-
-queryDB();
